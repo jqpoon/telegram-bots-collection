@@ -1,6 +1,6 @@
 import re
 import secret
-from diceware_wrapper import get_readable_uuid
+from dicewareWrapper import getReadableUuid
 from telegram.ext import (Updater, ConversationHandler,
                           CommandHandler, MessageHandler, Filters)
 
@@ -16,7 +16,7 @@ def start(update, context):
 
 
 def photo(update, context):
-    file_uuid = get_readable_uuid()
+    file_uuid = getReadableUuid()
 
     file = update.message.photo[-1].get_file()
     file.download('img/' + str(file_uuid) + '.jpg')
@@ -27,7 +27,7 @@ def photo(update, context):
 
 
 def document(update, context):
-    file_uuid = get_readable_uuid()
+    file_uuid = getReadableUuid()
     extension_pattern = re.compile(r'.*(\..*)')
 
     document = update.message.document
@@ -42,7 +42,7 @@ def document(update, context):
             "Visit this link to retrieve your file: localhost:8080/img/" + str(file_uuid) + file_ext)
 
 
-def start_telegrambot():
+def startTelegrambot():
     print("Starting telegram bot!")
     updater = Updater(token=secret.BOT_TOKEN, use_context=True)
     dispatcher = updater.dispatcher

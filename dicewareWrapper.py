@@ -11,5 +11,5 @@ args.caps = False
 args.delimiter = '-'
 args.specials = 0
 
-def get_readable_uuid():
+def getReadableUuid():
     return diceware.get_passphrase(args)
