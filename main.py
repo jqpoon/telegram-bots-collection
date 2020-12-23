@@ -1,10 +1,8 @@
 import threading
-import secret
 from telegram_bot import start_telegrambot
 from webserver import start_webserver
 
-telegrambot_thread = threading.Thread(
-    target=start_telegrambot, args=[secret.BOT_TOKEN])
+telegrambot_thread = threading.Thread(target=start_telegrambot)
 webserver_thread = threading.Thread(target=start_webserver)
 
 if __name__ == "__main__":
