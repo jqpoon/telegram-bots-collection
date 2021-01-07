@@ -3,7 +3,8 @@ import tornado
 
 
 class FileHandler(tornado.web.StaticFileHandler):
-    def initialize(self, **kwargs):
+    def initialize(self, fileMapping, **kwargs):
+        self.fileMapping = fileMapping
         super(FileHandler, self).initialize(**kwargs)
 
     def set_extra_headers(self, path=None):
