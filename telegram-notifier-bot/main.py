@@ -1,10 +1,11 @@
 import threading
-from telegramBot import startTelegrambot, sendTelegramMessage
+from telegramBot import telegramNotifierBot
 from messageListener import startListener
 
-telegrambotThread = threading.Thread(target=startTelegrambot)
+botInstance = telegramNotifierBot()
+telegrambotThread = threading.Thread(target=botInstance.startTelegramBot)
 listenerThread = threading.Thread(target=startListener, 
-                                  args=[sendTelegramMessage])
+                                  args=[botInstance.sendTelegramMessage])
 
 if __name__ == "__main__":
     telegrambotThread.start()
