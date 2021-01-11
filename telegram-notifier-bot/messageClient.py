@@ -1,5 +1,4 @@
 import secret
-import sys
 from multiprocessing.connection import Client
 
 def sendMessage(message: str):

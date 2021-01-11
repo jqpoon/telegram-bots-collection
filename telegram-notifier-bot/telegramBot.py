@@ -1,6 +1,8 @@
 from telegram.ext import (Updater, CommandHandler, MessageHandler, 
                           ConversationHandler, Filters)
 import secret
+import pickle
+import os
 
 PRE_AUTH, POST_AUTH = range(2)
 
@@ -19,7 +21,10 @@ class telegramNotifierBot():
 
     def authUser(self, update, context):
         if update.message.text == secret.PASSWORD:
-            self.chatIds.append(update.effective_chat.id)
+            chatId = update.effective_chat.id
+            if chatId not in self.chatIds:
+                self.chatIds.append(chatId)
+
             update.message.reply_text("Welcome ;)")
             return POST_AUTH
         else:
@@ -37,8 +42,11 @@ class telegramNotifierBot():
 
     # "Public" methods
     def sendTelegramMessage(self, message: str):
-        for chatId in self.chatIds:
-            self.botInstance.send_message(chatId, text=message)
+        if self.botInstance:
+            for chatId in self.chatIds:
+                self.botInstance.send_message(chatId, text=message)
+        else:
+            print("Please start the bot with /start!")
 
     def startTelegramBot(self):
         conv_handler = ConversationHandler(
@@ -49,7 +57,22 @@ class telegramNotifierBot():
         },
         fallbacks=[CommandHandler('cancel', self.cancel)])
 
-        updater = Updater(token=secret.BOT_TOKEN, use_context=True)
-        dispatcher = updater.dispatcher
+        # Load previous chatIds
+        filepath = secret.PICKLE_FILEPATH
+        if os.path.isfile(filepath):
+            with open(filepath, 'rb') as pfile:
+                self.chatIds = pickle.load(pfile)
+
+        # Set up bot
+        self.updater = Updater(token=secret.BOT_TOKEN, use_context=True)
+        dispatcher = self.updater.dispatcher
         dispatcher.add_handler(conv_handler)
-        updater.start_polling()
+        self.updater.start_polling()
+
+    def stopTelegramBot(self):
+        print("Saving chatIds to file...")
+        with open(secret.PICKLE_FILEPATH, 'wb') as pfile:
+                pickle.dump(self.chatIds, pfile)
+
+        print("Stopping telegram bot...")
+        self.updater.stop()

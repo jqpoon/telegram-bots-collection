@@ -2,17 +2,19 @@ import secret
 from typing import Callable
 from multiprocessing.connection import Listener
 
-def startListener(messageConsumer: Callable[[str], None]):
-    address = ("localhost", secret.MESSAGE_PORT)
-    listener = Listener(address, authkey=secret.AUTH_KEY)
+class messageListener():
+    def __init__(self):
+        self.listener = None
 
-    while True:
-        conn = listener.accept()
-        message = conn.recv()
-        messageConsumer(message)
-        if message == "close":
-            print("Closing connection!")
-            conn.close()
-            break
+    def startListener(self, messageConsumer: Callable[[str], None]):
+        address = ("localhost", secret.MESSAGE_PORT)
+        self.listener = Listener(address, authkey=secret.AUTH_KEY)
 
-    listener.close()
+        while True:
+            conn = self.listener.accept()
+            message = conn.recv()
+            messageConsumer(message)
+
+    def stopListener(self):
+        print("Stopping listener!")
+        self.listener.close()
