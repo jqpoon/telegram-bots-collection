@@ -2,12 +2,18 @@
 from questions import questions_list
 from secret import BOT_TOKEN
 from random import randint
+import logging
 
 from telegram import Update, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
 
-# Define a few command handlers. These usually take the two arguments update and
-# context.
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+
+logger = logging.getLogger(__name__)
+
 
 # Command handlers
 def start(update: Update, context: CallbackContext) -> None:
