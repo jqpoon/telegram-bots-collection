@@ -1,77 +1,47 @@
-from telegram.ext import (Updater, CommandHandler, MessageHandler, 
-                          ConversationHandler, Filters)
-import pickle
-import os
 
-PRE_AUTH, POST_AUTH = range(2)
+from questions import questions_list
+from secret import BOT_TOKEN
+from random import randint
 
-class telegramNotifierBot():
+from telegram import Update, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
 
-    def __init__(self):
-        self.chatIds = []
-        self.botInstance = None
+# Define a few command handlers. These usually take the two arguments update and
+# context.
 
-    def start(self, update, context):
-        self.botInstance = context.bot
-        self.botInstance.send_message(update.effective_chat.id,
-                                text="Welcome! This bot does nothing.")
+# Command handlers
+def start(update: Update, context: CallbackContext) -> None:
+    keyboard = [[InlineKeyboardButton("Next Question", callback_data='next_question')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Click me', reply_markup=reply_markup)
 
-        return PRE_AUTH
+def button(update: Update, context: CallbackContext) -> None:
+    """Parses the CallbackQuery and updates the message text."""
+    query = update.callback_query
+    query.answer()
 
-    def authUser(self, update, context):
-        if update.message.text == secret.PASSWORD:
-            chatId = update.effective_chat.id
-            if chatId not in self.chatIds:
-                self.chatIds.append(chatId)
+    keyboard = [[InlineKeyboardButton("Next Question", callback_data='next_question')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-            update.message.reply_text("Welcome ;)")
-            return POST_AUTH
-        else:
-            update.message.reply_text("I told you it does nothing.")
-            return PRE_AUTH
+    question = questions_list[randint(0, len(questions_list) - 1)]
 
-    def echo(self, update, context):
-        update.message.reply_text(update.message.text)
+    query.edit_message_text(text=f"{question}", reply_markup=reply_markup)
 
-    def cancel(self, update, context):
-        update.message.reply_text('Bye!')
+def main() -> None:
+    """Start the bot."""
+    # Create the Updater and pass it your bot's token.
+    updater = Updater(BOT_TOKEN)
 
-        return ConversationHandler.END
+    # Get the dispatcher to register handlers
+    dispatcher = updater.dispatcher
 
+    # on different commands - answer in Telegram
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CallbackQueryHandler(button))
 
-    # "Public" methods
-    def sendTelegramMessage(self, message: str):
-        if self.botInstance:
-            for chatId in self.chatIds:
-                self.botInstance.send_message(chatId, text=message)
-        else:
-            print("Please start the bot with /start!")
+    # Start the Bot
+    updater.start_polling()
+    updater.idle()
 
-    def startTelegramBot(self):
-        conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', self.start)],
-        states={
-            PRE_AUTH: [MessageHandler(Filters.text & (~Filters.command), self.authUser)],
-            POST_AUTH: [MessageHandler(Filters.text & (~Filters.command), self.echo)],
-        },
-        fallbacks=[CommandHandler('cancel', self.cancel)])
-
-        # Load previous chatIds
-        filepath = secret.PICKLE_FILEPATH
-        if os.path.isfile(filepath):
-            with open(filepath, 'rb') as pfile:
-                self.chatIds = pickle.load(pfile)
-
-        # Set up bot
-        self.updater = Updater(token=secret.BOT_TOKEN, use_context=True)
-        dispatcher = self.updater.dispatcher
-        dispatcher.add_handler(conv_handler)
-        self.updater.start_polling()
-
-    def stopTelegramBot(self):
-        print("Saving chatIds to file...")
-        with open(secret.PICKLE_FILEPATH, 'wb') as pfile:
-                pickle.dump(self.chatIds, pfile)
-
-        print("Stopping telegram bot...")
-        self.updater.stop()
+if __name__ == '__main__':
+    main()
