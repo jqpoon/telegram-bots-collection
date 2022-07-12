@@ -38,6 +38,7 @@ questions_list = [
     "Are you a good friend? Why or why not?",
     "Are any of your friends completely opposite to you or are most of them similar to you?",
     "Are you close to your family?",
+    "Are you lying to yourself about anything?",
 
     # If...
     "If you could wake up tomorrow having gained any one quality or ability, what would it be?",
@@ -49,13 +50,16 @@ questions_list = [
     "If your best friend of the opposite sex likes you, what would you do?",
     "If you could change anything about the way you were raised, what would it be?",
     "If a crystal ball could tell you the truth about yourself, your life, the future or anything else, what would you want to know?",
-    "If you were to die this evening with no opportunity to communicate with anyone, what would you most regret not having told someone? Why haven’t you told them yet?",
+    "If you were to die this evening with no opportunity to communicate with anyone, what would you most regret not having told someone? Why haven't you told them yet?",
     "If there was a library where each book is an alternate life where you made a different decision, which book would you choose?",
     "If you had a wish what would you wish for? (Other than more wishes)",
+    "If you could get to know someone in your life on a deeper level, who would it be and why?",
 
     # When
     "When did you last cry and why?",
     "When was the last time you went out by yourself / did something by yourself?",
+    "When was the last time you surprised yourself?",
+    "When you're asked how are you, how often do you answer truthfully?",
 
     # Who
     "Who is the last person you cried in front of? Why?",
@@ -104,12 +108,28 @@ questions_list = [
     "What is the favourite part of your daily routine?",
     "What does it mean when you are extremely quiet?",
     "What do you want to do when you retire?",
+    "What is a dream you've let go of?",
+    "What is the most pain you've ever been in that wasn't physical?",
+    "What are you still trying to prove to yourself?",
+    "What lesson took you the longest to unlearn?",
+    "What is been your happiest memory this past year?",
+    "What has been your earliest recollection of happiness?",
+    "What would your younger self not believe about your life today?",
+    "What is something you wouldn't want to change about yourself?",
+    "What has been the best compliment a stranger has ever given you?",
+    "What question are you trying to answer most in your life right now?",
+    "What title would you give this chapter in your life?",
+    "What has this conversation taught you about yourself?",
+
+    "Has a stranger ever changed your life?",
 
     # Misc
     "Tell (someone in the room) something you like about them.",
     "Tell (someone in the room) their greatest weakness.",
     "Describe your childhood in one word.",
-    "Describe your ideal type."
+    "Describe your ideal type.",
+    "How are you, really?",
+    "How does one earn your vulnerability?",
 ]
 
-print(len(questions_list))
+"if you had to choose between a friend who always tells you the truth, but you constantly argue with, or a friend that you get along well with but is too afraid of offending you, which would you pick"
